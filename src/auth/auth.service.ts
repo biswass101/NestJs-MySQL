@@ -61,6 +61,15 @@ export class AuthService {
         const conn = this.db.getConnection();
         const expiryDate = new Date();
         expiryDate.setDate(expiryDate.getDate() + 3);
+
+        //deleting previoud tokens
+        await conn.execute(
+            `DELETE FROM refresh_token
+             WHERE userId = ?`,
+            [userId]
+        )
+
+        //storing refresh token
         await conn.execute(
             'INSERT INTO refresh_token (token, userId, expiryDate) VALUES (?, ?, ?)',
             [token, userId, expiryDate],
