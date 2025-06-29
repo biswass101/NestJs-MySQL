@@ -1,98 +1,219 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# NestJS MySQL Authentication Project
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A NestJS application with MySQL database integration featuring user authentication. This project includes basic login and signup functionality using JWT tokens.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 🚀 Features
 
-## Description
+- **User Registration** - Sign up with email and password
+- **User Login** - Authentication with JWT tokens
+- **MySQL Database** - User data storage with TypeORM
+- **Password Hashing** - Secure password storage with bcrypt
+- **JWT Authentication** - Token-based authentication system
+- **Input Validation** - Request validation using class-validator
+- **TypeScript** - Full TypeScript support for type safety
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## 📋 Prerequisites
 
-## Project setup
+Before running this application, make sure you have the following installed:
 
-```bash
-$ npm install
-```
+- [Node.js](https://nodejs.org/) (v16 or higher)
+- [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
+- [MySQL](https://www.mysql.com/) (v8.0 or higher)
 
-## Compile and run the project
+## ⚙️ Installation
 
-```bash
-# development
-$ npm run start
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/biswass101/NestJs-MySQL.git
+   cd NestJs-MySQL
+   ```
 
-# watch mode
-$ npm run start:dev
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-# production mode
-$ npm run start:prod
-```
+3. **Environment Configuration**
+   
+   Create a `.env` file in the root directory:
+   ```env
+   # Database Configuration
+   DB_HOST=localhost
+   DB_PORT=3306
+   DB_USERNAME=your_username
+   DB_PASSWORD=your_password
+   DB_DATABASE=nestjs_auth_db
+   
+   # JWT Configuration
+   JWT_SECRET=your_super_secret_jwt_key
+   JWT_EXPIRES_IN=24h
+   
+   # Application Configuration
+   PORT=3000
+   ```
 
-## Run tests
+4. **Database Setup**
+   
+   Create a MySQL database:
+   ```sql
+   CREATE DATABASE nestjs_auth_db;
+   ```
 
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+## 🏃‍♂️ Running the Application
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+# Development mode
+npm run start:dev
+
+# Production mode
+npm run start:prod
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+The application will be available at `http://localhost:3000`
 
-## Resources
+## 🔐 Authentication Endpoints
 
-Check out a few resources that may come in handy when working with NestJS:
+### Sign Up
+```http
+POST /auth/signup
+Content-Type: application/json
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+{
+  "email": "user@example.com",
+  "password": "yourpassword"
+}
+```
 
-## Support
+**Response:**
+```json
+{
+  "message": "User created successfully",
+  "user": {
+    "id": 1,
+    "email": "user@example.com"
+  }
+}
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### Login
+```http
+POST /auth/login
+Content-Type: application/json
 
-## Stay in touch
+{
+  "email": "user@example.com",
+  "password": "yourpassword"
+}
+```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+**Response:**
+```json
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "user": {
+    "id": 1,
+    "email": "user@example.com"
+  }
+}
+```
 
-## License
+## 🏗️ Project Structure
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+```
+src/
+├── app.module.ts          # Root application module
+├── main.ts               # Application entry point
+├── auth/                 # Authentication module
+│   ├── auth.controller.ts    # Auth endpoints (login, signup)
+│   ├── auth.service.ts       # Auth business logic
+│   ├── auth.module.ts        # Auth module configuration
+│   ├── dto/                  # Data transfer objects
+│   │   ├── login.dto.ts      # Login request validation
+│   │   └── signup.dto.ts     # Signup request validation
+│   ├── entities/             # Database entities
+│   │   └── user.entity.ts    # User entity
+│   └── guards/               # Authentication guards
+│       └── jwt-auth.guard.ts # JWT guard
+└── database/             # Database configuration
+    └── database.module.ts    # TypeORM configuration
+```
+
+## 🛠️ Technologies Used
+
+- **Framework**: [NestJS](https://nestjs.com/) - Progressive Node.js framework
+- **Database**: [MySQL](https://www.mysql.com/) - Relational database
+- **ORM**: [TypeORM](https://typeorm.io/) - Database ORM
+- **Authentication**: [JWT](https://jwt.io/) - JSON Web Tokens
+- **Password Hashing**: [bcrypt](https://www.npmjs.com/package/bcrypt) - Password encryption
+- **Validation**: [class-validator](https://github.com/typestack/class-validator) - Request validation
+- **Language**: [TypeScript](https://www.typescriptlang.org/) - Type-safe JavaScript
+
+## 🧪 Testing
+
+```bash
+# Unit tests
+npm run test
+
+# E2E tests
+npm run test:e2e
+
+# Test coverage
+npm run test:cov
+```
+
+## 📝 Available Scripts
+
+| Script | Description |
+|--------|-------------|
+| `npm run start` | Start the application |
+| `npm run start:dev` | Start in development mode with hot reload |
+| `npm run start:prod` | Start in production mode |
+| `npm run build` | Build the application |
+| `npm run test` | Run unit tests |
+| `npm run test:e2e` | Run end-to-end tests |
+| `npm run lint` | Run ESLint |
+| `npm run format` | Format code with Prettier |
+
+## 🔒 Security Features
+
+- **Password Hashing**: All passwords are hashed using bcrypt before storing
+- **JWT Tokens**: Secure token-based authentication
+- **Input Validation**: All requests are validated using DTOs
+- **Environment Variables**: Sensitive data stored in environment variables
+
+## 🚀 Next Steps
+
+This is a basic authentication setup. You can extend it by adding:
+
+- **Profile Management** - Update user profile endpoints
+- **Password Reset** - Forgot password functionality
+- **Email Verification** - Verify email addresses
+- **Role-Based Access** - Admin/User roles
+- **Refresh Tokens** - Token refresh mechanism
+- **Social Login** - Google/Facebook authentication
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📝 License
+
+This project is licensed under the [MIT License](LICENSE).
+
+## 👨‍💻 Author
+
+**Biswas** - [biswass101](https://github.com/biswass101)
+
+## 📞 Support
+
+If you have any questions or need help:
+- Open an issue on GitHub
+- Contact: [your-email@example.com]
+
+---
+
+⭐ If you found this project helpful, please give it a star on GitHub!
