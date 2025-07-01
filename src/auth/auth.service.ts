@@ -106,4 +106,9 @@ export class AuthService {
 
     return "Password has been Changed";
   }
+
+
+  async forgotPassword(email: string) {
+    
+  }
 }

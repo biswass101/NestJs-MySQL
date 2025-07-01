@@ -4,6 +4,7 @@ import { LoginDto } from './dtos/login.dto';
 import { RefreshTokenDto } from './dtos/refresh-tokens.dto';
 import { ChangePasswordDto } from './dtos/change-password.dto';
 import { AuthGuard } from './guards/auth.guard';
+import { ForgotPassowrdDto } from './dtos/forgot-password.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -30,5 +31,10 @@ export class AuthController {
       changePasswordDto.oldPassword, 
       changePasswordDto.newPassword
     );
+  }
+
+  @Post('forgot-password')
+  async forgotPassword(@Body() forgotPassowrdDto: ForgotPassowrdDto) {
+    return this.authService.forgotPassword(forgotPassowrdDto.email)
   }
 }
