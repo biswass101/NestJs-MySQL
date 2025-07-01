@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
 import { LoginDto } from './dtos/login.dto';
 import * as bcrypt from 'bcrypt';
@@ -35,7 +35,7 @@ export class AuthService {
       userId: user[0].id,
     };
   }
-  async generateAccessTockes(userId) {
+  async generateAccessTockes(userId: any) {
     const accessToken = this.jwtservice.sign({ userId }, { expiresIn: '1h' });
     const refreshToken = uuidv4();
 
@@ -63,7 +63,7 @@ export class AuthService {
     return this.generateAccessTockes(tokenRecord.userId);
   }
 
-  async storeRefreshToken(token: string, userId) {
+  async storeRefreshToken(token: string, userId: any) {
     const conn = this.db.getConnection();
     const expiryDate = new Date();
     expiryDate.setDate(expiryDate.getDate() + 3);
@@ -83,8 +83,27 @@ export class AuthService {
   }
 
   async changePassword(userId: any, oldPassword: string, newPassword: string) {
+    const conn = this.db.getConnection();
+    
+    //find userById
+    const [isUserExists] = await conn.execute(`
+      SELECT * FROM users
+      WHERE id = ?
+      `, [userId]);
+      // console.log(isUserExists);
+    if(!isUserExists[0]) throw new NotFoundException("User Not Found!");
 
+    const matchPassword = await bcrypt.compare(oldPassword, isUserExists[0]?.password);
+
+    if(!matchPassword) throw new UnauthorizedException("Wrong credentials");
+    const newHashedPassword = await bcrypt.hash(newPassword, 10);
+    
+    await conn.execute(`
+      UPDATE users 
+      SET password = ?
+      WHERE id = ?`, [newHashedPassword, userId]);
     
 
+    return "Password has been Changed";
   }
 }
