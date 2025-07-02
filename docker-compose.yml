@@ -1,0 +1,40 @@
+name: nest+mysql
+
+services:
+  mysql:
+    image: mysql:8
+    container_name: mysql-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: 2025Niloy
+      MYSQL_DATABASE: nestjs_db
+      MYSQL_USER: biswass101
+      MYSQL_PASSWORD: 2025Niloy
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - nest-networks
+
+  app:
+    build: .
+    container_name: nest-app
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    env_file:
+      - ./.env
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    depends_on:
+      - mysql
+    networks:
+      - nest-networks
+
+volumes:
+  mysql-data:
+networks:
+  nest-networks:
+    driver: bridge
