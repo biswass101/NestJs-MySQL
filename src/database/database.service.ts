@@ -1,16 +1,19 @@
 import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
 import * as mysql from 'mysql2/promise';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class DatabaseService implements OnModuleInit, OnModuleDestroy {
   private connection: mysql.Connection;
+  
+  constructor(private readonly configService: ConfigService) {}
 
   async onModuleInit() {
     this.connection = await mysql.createConnection({
-      host: process.env.DB_HOST || 'localhost',
-      user: process.env.DB_USER || 'root',
-      password: process.env.DB_PASSWORD || '',
-      database: process.env.DB_NAME || '',
+      host: this.configService.get('db.db_host') || 'localhost',
+      user: this.configService.get('db.db_user')|| 'root',
+      password: this.configService.get('db.db_password') || '',
+      database: this.configService.get('db.db_name') || '',
     });
 
     await this.connection.connect();

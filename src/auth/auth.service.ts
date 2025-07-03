@@ -4,12 +4,14 @@ import { LoginDto } from './dtos/login.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { v4 as uuidv4 } from 'uuid';
+import { MailService } from './mail.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly db: DatabaseService,
     private jwtservice: JwtService,
+    private mailService: MailService
   ) {}
 
   async login(loginData: LoginDto) {
@@ -109,6 +111,27 @@ export class AuthService {
 
 
   async forgotPassword(email: string) {
+    const conn = this.db.getConnection();
+
+    const [isUserExists] = await conn.execute(`
+      SELECT id FROM users WHERE email = ?`, [email]);
     
+    if(!isUserExists[0]) throw new UnauthorizedException("User Not Found!");
+    console.log("id is: " + isUserExists[0].id);
+
+    const resetToken = uuidv4();
+    const expiryDate = new Date();
+    expiryDate.setDate(expiryDate.getDate() + 3);
+
+    await conn.execute(
+      'INSERT INTO reset_tokens (token, user_id, expiry_date) VALUES (?, ?, ?)',
+      [resetToken, isUserExists[0]?.id, expiryDate]);
+
+    
+    this.mailService.sendPasswordResetEmail(email, resetToken)
+
+    return {
+      messsage: 'Please check your email!'
+    }
   }
 }
