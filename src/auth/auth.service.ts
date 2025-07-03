@@ -123,6 +123,13 @@ export class AuthService {
     const expiryDate = new Date();
     expiryDate.setDate(expiryDate.getDate() + 3);
 
+    //deleting previous refresh tokens
+    await conn.execute(
+      `DELETE FROM reset_tokens
+             WHERE user_id = ?`,
+      [isUserExists[0]?.id],
+    );
+
     await conn.execute(
       'INSERT INTO reset_tokens (token, user_id, expiry_date) VALUES (?, ?, ?)',
       [resetToken, isUserExists[0]?.id, expiryDate]);
@@ -133,5 +140,15 @@ export class AuthService {
     return {
       messsage: 'Please check your email!'
     }
+  }
+
+  async resetPassword(newPassword: string, resetToken: string) {
+    const conn = this.db.getConnection();
+
+    //find token
+    const [isTokenExists] = await conn.execute(`
+      SELECT * FROM reset_tokens WHERE toke = ?`, [resetToken])
+    if(!isTokenExists[0]) throw new UnauthorizedException("Unauthorized user!");
+    
   }
 }
