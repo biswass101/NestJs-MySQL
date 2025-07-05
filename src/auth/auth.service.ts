@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
 import { LoginDto } from './dtos/login.dto';
 import * as bcrypt from 'bcrypt';
@@ -147,8 +147,25 @@ export class AuthService {
 
     //find token
     const [isTokenExists] = await conn.execute(`
-      SELECT * FROM reset_tokens WHERE toke = ?`, [resetToken])
+      SELECT * FROM reset_tokens 
+      WHERE token = ? AND expiry_date > ?`, [resetToken, new Date()])
     if(!isTokenExists[0]) throw new UnauthorizedException("Unauthorized user!");
+    const [getUser] = await conn.execute(`
+      SELECT * FROM users WHERE id = ?`, [isTokenExists[0].user_id]);
     
+    if(!getUser[0]) throw new InternalServerErrorException("Something went wrong!");
+    const newHashedPassword = await bcrypt.hash(newPassword, 10);
+
+    console.log(getUser[0]);
+    
+    await conn.execute(`
+      UPDATE users 
+      SET password = ?
+      WHERE id = ?`, [newHashedPassword, isTokenExists[0].user_id])
+    
+    return {
+      message: "Password Changed",
+    }
+
   }
 }
